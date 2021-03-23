@@ -33,7 +33,6 @@ import com.google.mlkit.vision.text.TextRecognizer;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String MY_CAMERA_ID = "my_camera_id";
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Button captureImageBtn, detectTextBtn;
     private ImageView imageView;
@@ -110,43 +109,6 @@ public class MainActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
         }
-    }
-
-
-    // Get camera angle
-    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    static {
-        ORIENTATIONS.append(Surface.ROTATION_0, 0);
-        ORIENTATIONS.append(Surface.ROTATION_90, 90);
-        ORIENTATIONS.append(Surface.ROTATION_180, 180);
-        ORIENTATIONS.append(Surface.ROTATION_270, 270);
-    }
-
-    /**
-     * Get the angle by which an image must be rotated given the device's current
-     * orientation.
-     */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private int getRotationCompensation(String cameraId, Activity activity, boolean isFrontFacing)
-            throws CameraAccessException {
-        // Get the device's current rotation relative to its "native" orientation.
-        // Then, from the ORIENTATIONS table, look up the angle the image must be
-        // rotated to compensate for the device's rotation.
-        int deviceRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        int rotationCompensation = ORIENTATIONS.get(deviceRotation);
-
-        // Get the device's sensor orientation.
-        CameraManager cameraManager = (CameraManager) activity.getSystemService(CAMERA_SERVICE);
-        int sensorOrientation = cameraManager
-                .getCameraCharacteristics(cameraId)
-                .get(CameraCharacteristics.SENSOR_ORIENTATION);
-
-        if (isFrontFacing) {
-            rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
-        } else { // back-facing
-            rotationCompensation = (sensorOrientation - rotationCompensation + 360) % 360;
-        }
-        return rotationCompensation;
     }
 
 }
